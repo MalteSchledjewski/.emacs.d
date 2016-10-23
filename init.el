@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -13,6 +13,28 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
+
+;;; helm
+(require 'helm-config)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(helm-mode 1)
+(helm-flx-mode +1)
+(eval-after-load 'flycheck
+   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+
+(eval-after-load 'company
+  '(progn
+     (define-key company-mode-map (kbd "C-:") 'helm-company)
+     (define-key company-active-map (kbd "C-:") 'helm-company)))
+
+;;; flyspell
+(require 'flyspell-correct-helm)
+(define-key flyspell-mode-map (kbd "C-;") 'flyspell-correct-previous-word-generic)
+
+(require 'auto-dictionary)
+(add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
+
+(require 'ace-flyspell)
 
 ;;;; org mode
 ;; nice bullet points
@@ -123,3 +145,16 @@
     (global-set-key "\C-x4c" 'langtool-correct-buffer)
 
 (setq langtool-default-language "en-GB")
+
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+
+
+(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+
+(global-diff-hl-mode)
+(diff-hl-flydiff-mode)
+
+(setq auto-package-update-delete-old-versions t)
+(auto-package-update-maybe)
+
