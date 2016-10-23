@@ -25,7 +25,9 @@
 (eval-after-load 'company
   '(progn
      (define-key company-mode-map (kbd "C-:") 'helm-company)
-     (define-key company-active-map (kbd "C-:") 'helm-company)))
+     (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+     (global-set-key (kbd "C-x C-f") 'helm-find-files)
+     ))
 
 ;;; flyspell
 (require 'flyspell-correct-helm)
