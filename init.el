@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -13,6 +13,8 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
+
+(require 'cmake-mode)
 
 ;;; helm
 (require 'helm-config)
@@ -28,6 +30,45 @@
      (global-set-key (kbd "M-y") 'helm-show-kill-ring)
      (global-set-key (kbd "C-x C-f") 'helm-find-files)
      ))
+
+
+;;; C++
+(require 'company)
+;(add-to-list 'company-backends 'company-c-headers)
+;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.2.1/")
+
+(require 'flycheck-rtags)
+;; ensure that we use only rtags checking
+;; https://github.com/Andersbakken/rtags#optional-1
+(defun my-flycheck-rtags-setup ()
+  (interactive)
+  (flycheck-select-checker 'rtags)
+  ;; RTags creates more accurate overlays.
+  (setq-local flycheck-highlighting-mode nil)
+  (setq-local flycheck-check-syntax-automatically nil))
+
+;; c-mode-common-hook is also called by c++-mode
+(add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
+
+(add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
+(add-hook 'c++-mode-common-hook 'rtags-start-process-unless-running)
+
+(setq rtags-completions-enabled t)
+(eval-after-load 'company
+  '(add-to-list
+    'company-backends 'company-rtags))
+(setq rtags-autostart-diagnostics t)
+(rtags-enable-standard-keybindings)
+(setq rtags-use-helm t)
+
+
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
 
 ;;; flyspell
 (require 'flyspell-correct-helm)
