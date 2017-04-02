@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -35,7 +35,7 @@
 ;;; C++
 (require 'company)
 ;(add-to-list 'company-backends 'company-c-headers)
-;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.2.1/")
+;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/")
 
 (require 'flycheck-rtags)
 ;; ensure that we use only rtags checking
@@ -54,9 +54,10 @@
 (add-hook 'c++-mode-common-hook 'rtags-start-process-unless-running)
 
 (setq rtags-completions-enabled t)
-(eval-after-load 'company
-  '(add-to-list
-    'company-backends 'company-rtags))
+;(eval-after-load 'company
+;  '(add-to-list
+;    'company-backends 'company-rtags))
+(push 'company-rtags company-backends)
 (setq rtags-autostart-diagnostics t)
 (rtags-enable-standard-keybindings)
 (setq rtags-use-helm t)
@@ -120,10 +121,12 @@
 (setq TeX-parse-self t) ; Enable parse on load.
 (setq TeX-auto-save t) ; Enable parse on save.
 (setq TeX-PDF-mode t)
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+;(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTeX-mode-hook 'turn-on-font-lock)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+;(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(global-visual-line-mode 1)
 (require 'reftex)
  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 ; (add-hook 'latex-mode-hook 'turn-on-reftex)
