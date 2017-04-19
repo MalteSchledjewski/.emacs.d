@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm  flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -72,6 +72,16 @@
  )
 
 ;;; flyspell
+(dolist (hook '(text-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode 1))))
+    (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+      (add-hook hook (lambda () (flyspell-mode -1))))
+  (add-hook 'c++-mode-hook
+          (lambda ()
+            (flyspell-prog-mode)
+            ; ...
+          ))
+
 (require 'flyspell-correct-helm)
 (define-key flyspell-mode-map (kbd "C-;") 'flyspell-correct-previous-word-generic)
 
@@ -79,6 +89,7 @@
 (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
 
 (require 'ace-flyspell)
+(ace-flyspell-setup)
 
 ;;;; org mode
 ;; nice bullet points
@@ -111,7 +122,7 @@
  ;; If there is more than one, they won't work right.
  )
 (load-theme 'monokai t)
-(load "~/.emacs.d/lisp/PG/generic/proof-site")
+;;(load "~/.emacs.d/lisp/PG/generic/proof-site")
 ;;(setq auto-mode-alist (cons '("\\.v$" . unicode-tokens-mode) auto-mode-alist))
 
 (load "auctex.el" nil t t)
@@ -183,7 +194,7 @@
 ;; languagetool
 ;;(add-to-list 'load-path "~/")
  (require 'langtool)
-(setq langtool-language-tool-jar "/development/LanguageTool/languagetool-commandline.jar")
+(setq langtool-language-tool-jar "/home/mschledjewski/LanguageTool/languagetool-commandline.jar")
     (global-set-key "\C-x4w" 'langtool-check)
     (global-set-key "\C-x4W" 'langtool-check-done)
     (global-set-key "\C-x4l" 'langtool-switch-default-language)
