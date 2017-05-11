@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags helm-rtags bnfc))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -49,18 +49,24 @@
 
 ;; c-mode-common-hook is also called by c++-mode
 (add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
+(add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
 
 (add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
 (add-hook 'c++-mode-common-hook 'rtags-start-process-unless-running)
 
-(setq rtags-completions-enabled t)
-;(eval-after-load 'company
-;  '(add-to-list
-;    'company-backends 'company-rtags))
-(push 'company-rtags company-backends)
 (setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+(setq rtags-completions-enabled t)
+(push 'company-rtags company-backends)
+(global-company-mode)
+(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
 (rtags-enable-standard-keybindings)
+(require 'helm-rtags)
 (setq rtags-use-helm t)
+
+(add-hook 'c-mode-common-hook
+  (lambda() 
+    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
 
 (setq
