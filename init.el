@@ -4,7 +4,7 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags helm-rtags bnfc markdown-mode))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags helm-rtags company-rtags bnfc markdown-mode cmake-mode))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -33,6 +33,7 @@
 
 
 ;;; C++
+(require 'rtags)
 (require 'company)
 ;(add-to-list 'company-backends 'company-c-headers)
 ;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/")
@@ -68,6 +69,24 @@
   (lambda() 
     (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
+
+(setq-default indent-tabs-mode nil)
+(setq tab-stop-list (number-sequence 4 120 4))
+(setq tab-width 4)
+
+(defun vis-c-insert-include-guard()
+  (interactive)
+  (let ((guard-str
+         (concat
+          (replace-regexp-in-string "[.-]" "_"
+                                    (upcase (file-name-sans-extension (buffer-name))))
+          "_H")))
+    (save-excursion
+      (beginning-of-buffer)
+      (insert (concat "#ifndef " guard-str "\n"))
+      (insert (concat "#define " guard-str "\n"))
+      (end-of-buffer)
+      (insert "\n#endif\n"))))
 
 (setq
  ;; use gdb-many-windows by default
