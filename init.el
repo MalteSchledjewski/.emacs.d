@@ -4,7 +4,8 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode rtags flycheck-rtags helm-rtags company-rtags bnfc markdown-mode cmake-mode cl-lib))
+;  rtags flycheck-rtags helm-rtags company-rtags bnfc 
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode markdown-mode cl-lib))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -34,42 +35,42 @@
      ))
 
 
-;;; C++
-(require 'rtags)
+;;;; C++
+;(require 'rtags)
 (require 'company)
-;(add-to-list 'company-backends 'company-c-headers)
-;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/")
+;;(add-to-list 'company-backends 'company-c-headers)
+;;(add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/")
 
-(require 'flycheck-rtags)
+;(require 'flycheck-rtags)
 ;; ensure that we use only rtags checking
 ;; https://github.com/Andersbakken/rtags#optional-1
-(defun my-flycheck-rtags-setup ()
-  (interactive)
-  (flycheck-select-checker 'rtags)
-  ;; RTags creates more accurate overlays.
-  (setq-local flycheck-highlighting-mode nil)
-  (setq-local flycheck-check-syntax-automatically nil))
+;(defun my-flycheck-rtags-setup ()
+;  (interactive)
+;  (flycheck-select-checker 'rtags)
+;  ;; RTags creates more accurate overlays.
+;  (setq-local flycheck-highlighting-mode nil)
+;  (setq-local flycheck-check-syntax-automatically nil))
 
-;; c-mode-common-hook is also called by c++-mode
-(add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
-(add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
+;;; c-mode-common-hook is also called by c++-mode
+;(add-hook 'c-mode-common-hook #'my-flycheck-rtags-setup)
+;(add-hook 'c++-mode-hook #'my-flycheck-rtags-setup)
 
-(add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
-(add-hook 'c++-mode-common-hook 'rtags-start-process-unless-running)
+;(add-hook 'c-mode-common-hook 'rtags-start-process-unless-running)
+;(add-hook 'c++-mode-common-hook 'rtags-start-process-unless-running)
 
-(setq rtags-autostart-diagnostics t)
-(rtags-diagnostics)
-(setq rtags-completions-enabled t)
-(push 'company-rtags company-backends)
+;(setq rtags-autostart-diagnostics t)
+;(rtags-diagnostics)
+;(setq rtags-completions-enabled t)
+;(push 'company-rtags company-backends)
 (global-company-mode)
 (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
-(rtags-enable-standard-keybindings)
-(require 'helm-rtags)
-(setq rtags-use-helm t)
+;(rtags-enable-standard-keybindings)
+;(require 'helm-rtags)
+;(setq rtags-use-helm t)
 
-(add-hook 'c-mode-common-hook
-  (lambda() 
-    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+;(add-hook 'c-mode-common-hook
+;  (lambda() 
+;    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
 
 
 (setq-default indent-tabs-mode nil)
@@ -218,17 +219,17 @@
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 
-;; languagetool
-;;(add-to-list 'load-path "~/")
- (require 'langtool)
-(setq langtool-language-tool-jar "/home/mschledjewski/LanguageTool/languagetool-commandline.jar")
-    (global-set-key "\C-x4w" 'langtool-check)
-    (global-set-key "\C-x4W" 'langtool-check-done)
-    (global-set-key "\C-x4l" 'langtool-switch-default-language)
-    (global-set-key "\C-x44" 'langtool-show-message-at-point)
-    (global-set-key "\C-x4c" 'langtool-correct-buffer)
+;;; languagetool
+;;;(add-to-list 'load-path "~/")
+; (require 'langtool)
+;(setq langtool-language-tool-jar "/home/mschledjewski/LanguageTool/languagetool-commandline.jar")
+;    (global-set-key "\C-x4w" 'langtool-check)
+;    (global-set-key "\C-x4W" 'langtool-check-done)
+;    (global-set-key "\C-x4l" 'langtool-switch-default-language)
+;    (global-set-key "\C-x44" 'langtool-show-message-at-point)
+;    (global-set-key "\C-x4c" 'langtool-correct-buffer)
 
-(setq langtool-default-language "en-GB")
+;(setq langtool-default-language "en-GB")
 
 (require 'magit-gitflow)
 (add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
