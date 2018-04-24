@@ -1,3 +1,10 @@
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-language-environment 'utf-8)
+(set-selection-coding-system 'utf-8)
+
+
+
 (require 'package) ;; You might already have this line
 ;(add-to-list 'package-archives
 ;             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -5,7 +12,7 @@
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize) ;; You might already have this line
 ;  rtags flycheck-rtags helm-rtags company-rtags bnfc 
-(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode markdown-mode cl-lib))
+(setq package-list '(org-bullets magit company company-auctex company-coq company-flx company-c-headers flycheck flycheck-color-mode-line langtool monokai-theme org auctex-latexmk biblio company-math projectile helm-core helm flyspell flyspell-correct flyspell-correct-helm auto-dictionary ace-flyspell helm-projectile helm-flx helm-flycheck helm-bibtex helm-company magit-annex magit-gitflow diff-hl auto-package-update cmake-mode markdown-mode cl-lib auctex magic-latex-buffer))
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -63,7 +70,7 @@
 ;(setq rtags-completions-enabled t)
 ;(push 'company-rtags company-backends)
 (global-company-mode)
-(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
+;(define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
 ;(rtags-enable-standard-keybindings)
 ;(require 'helm-rtags)
 ;(setq rtags-use-helm t)
@@ -141,7 +148,7 @@
  '(markdown-command "cmark")
  '(package-selected-packages
    (quote
-    (org langtool ace-jump-mode flycheck-color-mode-line flycheck company-flx company-coq company-auctex company markdown-mode paradox monokai-theme paradox)))
+    (php+-mode org langtool ace-jump-mode flycheck-color-mode-line flycheck company-flx company-coq company-auctex company markdown-mode paradox monokai-theme paradox)))
  '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -153,8 +160,8 @@
 ;;(load "~/.emacs.d/lisp/PG/generic/proof-site")
 ;;(setq auto-mode-alist (cons '("\\.v$" . unicode-tokens-mode) auto-mode-alist))
 
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
+;(load "auctex.el" nil t t)
+;(load "preview-latex.el" nil t t)
 (require 'tex-site)
 (setq-default TeX-master nil) ; Query for master file.
 (setq TeX-parse-self t) ; Enable parse on load.
@@ -184,6 +191,10 @@
       (company-flx-mode +1))
 ;; global activation of the unicode symbol completion 
 (add-to-list 'company-backends 'company-math-symbols-unicode)
+
+(require 'magic-latex-buffer)
+(add-hook 'latex-mode-hook 'magic-latex-buffer)
+
 
 ;flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -221,13 +232,14 @@
 
 ;;; languagetool
 ;;;(add-to-list 'load-path "~/")
-; (require 'langtool)
-;(setq langtool-language-tool-jar "/home/mschledjewski/LanguageTool/languagetool-commandline.jar")
-;    (global-set-key "\C-x4w" 'langtool-check)
-;    (global-set-key "\C-x4W" 'langtool-check-done)
-;    (global-set-key "\C-x4l" 'langtool-switch-default-language)
-;    (global-set-key "\C-x44" 'langtool-show-message-at-point)
-;    (global-set-key "\C-x4c" 'langtool-correct-buffer)
+ (require 'langtool)
+(setq langtool-language-tool-jar "/home/mschledjewski/LanguageTool/languagetool-commandline.jar"
+      langtool-mother-tongue "de")
+    (global-set-key "\C-x4w" 'langtool-check)
+    (global-set-key "\C-x4W" 'langtool-check-done)
+    (global-set-key "\C-x4l" 'langtool-switch-default-language)
+    (global-set-key "\C-x44" 'langtool-show-message-at-point)
+    (global-set-key "\C-x4c" 'langtool-correct-buffer)
 
 ;(setq langtool-default-language "en-GB")
 
